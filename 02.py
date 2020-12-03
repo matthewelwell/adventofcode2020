@@ -5,7 +5,7 @@ def part1(data):
         if password_checker.contains_correct_num_occurrences():
             num_valid_passwords += 1
     return num_valid_passwords
-        
+
 
 def part2(data):
     num_valid_passwords = 0
@@ -40,9 +40,15 @@ class PasswordChecker:
         self.search_char = char[0]
 
     def contains_correct_num_occurrences(self):
-        return self.first_integer <= self.password.count(self.search_char) <= self.second_integer
+        return (
+            self.first_integer
+            <= self.password.count(self.search_char)
+            <= self.second_integer
+        )
 
     def match_at_one_index(self):
         first_index_match = self.password[self.first_integer - 1] == self.search_char
         second_index_match = self.password[self.second_integer - 1] == self.search_char
-        return (first_index_match and not second_index_match) or (not first_index_match and second_index_match)
+        return (first_index_match and not second_index_match) or (
+            not first_index_match and second_index_match
+        )
