@@ -1,7 +1,7 @@
 import pytest
 from marshmallow import ValidationError
 
-from utils.day4.validators import HeightValidator, YearValidator
+from utils.day4.validators import HeightValidator
 
 
 @pytest.mark.parametrize(
