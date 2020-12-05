@@ -14,10 +14,10 @@ class PassportDataSchema(Schema):
         required=True, validate=YearValidator(min_year=2020, max_year=2030)
     )
     hgt = fields.Str(required=True, validate=HeightValidator())
-    hcl = fields.Str(required=True, validate=validate.Regexp(r"#[0-9a-f]{6}"))
+    hcl = fields.Str(required=True, validate=validate.Regexp(r"^#[0-9a-f]{6}$"))
     ecl = fields.Str(
         required=True,
         validate=validate.OneOf(("amb", "blu", "brn", "gry", "grn", "hzl", "oth")),
     )
-    pid = fields.Str(required=True, validate=validate.Regexp(r"[0-9]{9}"))
+    pid = fields.Str(required=True, validate=validate.Regexp(r"^[0-9]{9}$"))
     cid = fields.Str(required=False)
