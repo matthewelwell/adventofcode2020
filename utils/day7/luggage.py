@@ -26,11 +26,9 @@ def parse_input(input_: str) -> typing.Tuple[str, typing.List[str]]:
 
 
 def count_suitable_containers(graph: dict, target: str):
-    suitable_containers = set()
-    for key in graph.keys():
-        if key != target and key not in suitable_containers and can_contain_target(graph, key, target):
-            suitable_containers.add(key)
-    return len(suitable_containers)
+    return sum(
+        can_contain_target(graph, key, target) for key in graph.keys() if key != target
+    )
 
 
 def can_contain_target(graph: dict, key: str, target: str):
