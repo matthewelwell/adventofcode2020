@@ -5,7 +5,7 @@ valid_containers = set()
 
 def build_graph(data: str):
     return {
-        node: edges for node, edges in [parse_input(line) for line in data.splitlines()]
+        node: set(edges) for node, edges in [parse_input(line) for line in data.splitlines()]
     }
 
 
