@@ -9,9 +9,9 @@ def build_graph(data: str):
     }
 
 
-def parse_input(input_: str) -> typing.Tuple[str, typing.List[str]]:
+def parse_input(input_: str) -> typing.Tuple[str, typing.Set[typing.Tuple]]:
     node, edges_raw = input_.split("bags contain")
-    edges = []
+    edges = set()
     for child_bag_data in edges_raw.split(","):
         if child_bag_data.strip() == "no other bags.":
             break
@@ -20,7 +20,7 @@ def parse_input(input_: str) -> typing.Tuple[str, typing.List[str]]:
         words.pop()  # to remove the keyword bag / bags from the end of the list
         quantity = int(words.pop(0))
         colour = " ".join(words)
-        edges.extend([colour.strip() for _ in range(quantity)])
+        edges.add((quantity, colour))
 
     return node.strip(), edges
 
@@ -34,9 +34,9 @@ def count_suitable_containers(graph: dict, target: str):
 def can_contain_target(graph: dict, key: str, target: str):
     if not graph[key]:
         return False
-    if target in graph[key]:
+    if target in map(lambda edge: edge[1], graph[key]):
         return True
 
     return any(
-        can_contain_target(graph, child, target) for child in graph[key]
+        can_contain_target(graph, child[1], target) for child in graph[key]
     )
