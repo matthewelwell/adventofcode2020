@@ -1,4 +1,4 @@
-from utils.day7.luggage import parse_input, count_suitable_containers, build_graph
+from utils.day7.luggage import parse_input, count_suitable_containers, build_graph, count_child_bags
 
 
 def test_bag_parse_input_valid_children():
@@ -10,8 +10,8 @@ def test_bag_parse_input_valid_children():
 
     # Then
     assert node == "light red"
-    assert len(edges) == 3
-    assert set(edges) == {"bright white", "muted yellow"}
+    assert len(edges) == 2
+    assert edges == {(1, "bright white"), (2, "muted yellow")}
 
 
 def test_bag_parse_input_no_children():
@@ -23,7 +23,7 @@ def test_bag_parse_input_no_children():
 
     # Then
     assert node == "light red"
-    assert edges == []
+    assert edges == set()
 
 
 def test_count_suitable_containers():
@@ -46,3 +46,39 @@ def test_count_suitable_containers():
 
     # Then
     assert suitable_containers == 4
+
+
+def test_count_child_bags_simple():
+    # Given
+    input = """
+        shiny gold bags contain 2 dark red bags.
+        dark red bags contain no other bags.
+    """
+    graph = build_graph(input.strip())
+
+    # When
+    count = count_child_bags(graph, "shiny gold")
+
+    # Then
+    assert count == 2
+
+
+def test_count_child_bags():
+    # Given
+    test_input = """
+        shiny gold bags contain 2 dark red bags.
+        dark red bags contain 2 dark orange bags.
+        dark orange bags contain 2 dark yellow bags.
+        dark yellow bags contain 2 dark green bags.
+        dark green bags contain 2 dark blue bags.
+        dark blue bags contain 2 dark violet bags.
+        dark violet bags contain no other bags.
+        plum bags contain no other bags.
+    """
+    graph = build_graph(test_input.strip())
+
+    # When
+    child_bags = count_child_bags(graph, "shiny gold")
+
+    # Then
+    assert child_bags == 126
