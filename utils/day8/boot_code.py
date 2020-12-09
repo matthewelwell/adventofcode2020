@@ -16,32 +16,44 @@ class Instruction:
 class BootCodeRunner:
     instructions: typing.List[Instruction] = []
     accumulator: int
+    counter: int
 
     def run(self, input_: str):
-        self.accumulator = 0  # always reset the accumulator on a new run
+        # always reset the counter and accumulator on a new run
+        self.accumulator = 0
+        self.counter = 0
 
-        instructions = [
+        instructions = self._get_instructions(input_)
+
+        while True:
+            instruction = instructions[self.counter]
+            if instruction.executed:
+                return self.accumulator
+
+            handler = self.get_handler(instruction.operation)
+            handler(instruction)
+            instruction.executed = True
+
+    def _get_instructions(self, input_):
+        return [
             self._parse_raw_instruction(raw_instruction)
             for raw_instruction in input_.splitlines()
         ]
 
-        counter = 0
-        while True:
-            instruction = instructions[counter]
-
-            if instruction.executed:
-                return self.accumulator
-            elif instruction.operation == Instruction.NOP:
-                instruction.executed = True
-                counter += 1
-            elif instruction.operation == Instruction.ACC:
-                instruction.executed = True
-                self.accumulator += instruction.argument
-                counter += 1
-            elif instruction.operation == Instruction.JMP:
-                instruction.executed = True
-                counter += instruction.argument
-
-    def _parse_raw_instruction(self, raw_instruction: str) -> Instruction:
+    @staticmethod
+    def _parse_raw_instruction(raw_instruction: str) -> Instruction:
         operation, raw_argument = raw_instruction.split()
         return Instruction(operation=operation, argument=int(raw_argument))
+
+    def get_handler(self, operation):
+        return getattr(self, f"handle_{operation.lower()}")
+
+    def handle_nop(self, instruction: Instruction):
+        self.counter += 1
+
+    def handle_jmp(self, instruction: Instruction):
+        self.counter += instruction.argument
+
+    def handle_acc(self, instruction: Instruction):
+        self.accumulator += instruction.argument
+        self.counter += 1
