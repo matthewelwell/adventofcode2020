@@ -2,4 +2,4 @@ import runner
 
 
 if __name__ == "__main__":
-    runner.run(day=10)
+    runner.run(day=11)
