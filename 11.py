@@ -1,7 +1,8 @@
 import numpy as np
 
 from utils.day11.helpers import count_unique_values
-from utils.day11.waiting_area import WaitingArea, OCCUPIED
+from utils.day11.waiting_area import WaitingArea
+from utils.day11.constants import OCCUPIED
 
 
 def part1(data: str):

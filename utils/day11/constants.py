@@ -1,0 +1,3 @@
+VACANT = "L"
+OCCUPIED = "#"
+FLOOR = "."
