@@ -13,34 +13,35 @@ class WaitingArea:
         self.rows, self.cols = seats.shape
 
     def update_seats(self) -> bool:
-        new_array = np.copy(self.seats)
+        new_seats = np.copy(self.seats)
         updated = False
 
-        for i in range(0, self.rows):
-            for j in range(0, self.cols):
+        for i in range(self.rows):
+            for j in range(self.cols):
                 value = self.seats[i, j]
                 if value == VACANT:
-                    new_array[i, j] = OCCUPIED if OCCUPIED not in self.get_adjacent_seats(i, j) else VACANT
+                    new_seats[i, j] = (
+                        OCCUPIED
+                        if OCCUPIED not in self.get_adjacent_seats(i, j)
+                        else VACANT
+                    )
                 elif value == OCCUPIED:
                     occupied_adjacent = self.count_occupied_adjacent(i, j)
-                    new_array[i, j] = VACANT if occupied_adjacent >= 4 else OCCUPIED
+                    new_seats[i, j] = VACANT if occupied_adjacent >= 4 else OCCUPIED
                 else:
-                    new_array[i, j] = value
+                    new_seats[i, j] = value
 
                 # set a state value to confirm if any updates
                 # were made in this iteration
-                if not updated and new_array[i, j] != self.seats[i, j]:
+                if not updated and new_seats[i, j] != self.seats[i, j]:
                     updated = True
 
-        self.seats = new_array
-
+        self.seats = new_seats
         return updated
 
     def get_adjacent_seats(self, x: int, y: int) -> np.ndarray:
-        min_x = max(x - 1, 0)
-        max_x = min(x + 2, self.cols)
-        min_y = max(y - 1, 0)
-        max_y = min(y + 2, self.rows)
+        min_x, max_x = (max(x - 1, 0), min(x + 2, self.rows))
+        min_y, max_y = (max(y - 1, 0), min(y + 2, self.cols))
         return self.seats[min_x:max_x, min_y:max_y]
 
     def count_occupied_adjacent(self, x: int, y: int) -> int:
