@@ -4,7 +4,7 @@ from utils.day11.constants import VACANT, OCCUPIED, FLOOR
 from utils.day11.helpers import count_unique_values, not_floor
 
 
-class WaitingArea:
+class WaitingAreaPart1:
     def __init__(self, seats: np.ndarray):
         self.seats = seats
         self.rows, self.cols = seats.shape
@@ -15,18 +15,7 @@ class WaitingArea:
 
         for i in range(self.rows):
             for j in range(self.cols):
-                value = self.seats[i, j]
-                if value == VACANT:
-                    new_seats[i, j] = (
-                        OCCUPIED
-                        if OCCUPIED not in self.get_all_in_line_of_sight(i, j)
-                        else VACANT
-                    )
-                elif value == OCCUPIED:
-                    occupied_adjacent = self.get_all_in_line_of_sight(i, j).count(OCCUPIED)
-                    new_seats[i, j] = VACANT if occupied_adjacent >= 5 else OCCUPIED
-                else:
-                    new_seats[i, j] = value
+                self._perform_update(i, j, new_seats)
 
                 # set a state value to confirm if any updates
                 # were made in this iteration
@@ -35,6 +24,20 @@ class WaitingArea:
 
         self.seats = new_seats
         return updated
+
+    def _perform_update(self, x: int, y: int, new_seats: np.ndarray):
+        value = self.seats[x, y]
+        if value == VACANT:
+            new_seats[x, y] = (
+                OCCUPIED
+                if OCCUPIED not in self.get_adjacent_seats(x, y)
+                else VACANT
+            )
+        elif value == OCCUPIED:
+            occupied_adjacent = self.count_occupied_adjacent(x, y)
+            new_seats[x, y] = VACANT if occupied_adjacent >= 4 else OCCUPIED
+        else:
+            new_seats[x, y] = value
 
     def get_adjacent_seats(self, x: int, y: int) -> np.ndarray:
         min_x, max_x = (max(x - 1, 0), min(x + 2, self.rows))
@@ -45,6 +48,22 @@ class WaitingArea:
         adjacent_seats = self.get_adjacent_seats(x, y)
         count = count_unique_values(adjacent_seats, OCCUPIED)
         return count - 1  # -1 to account for seat we're looking at
+
+
+class WaitingAreaPart2(WaitingAreaPart1):
+    def _perform_update(self, x: int, y: int, new_seats: np.ndarray):
+        value = self.seats[x, y]
+        if value == VACANT:
+            new_seats[x, y] = (
+                OCCUPIED
+                if OCCUPIED not in self.get_all_in_line_of_sight(x, y)
+                else VACANT
+            )
+        elif value == OCCUPIED:
+            occupied_adjacent = self.get_all_in_line_of_sight(x, y).count(OCCUPIED)
+            new_seats[x, y] = VACANT if occupied_adjacent >= 5 else OCCUPIED
+        else:
+            new_seats[x, y] = value
 
     def get_all_in_line_of_sight(self, x: int, y: int) -> list:
         down_slope = np.diagonal(self.seats, offset=y - x).flatten()
