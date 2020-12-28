@@ -11,4 +11,9 @@ def part1(data: str) -> typing.Union[str, int]:
 
 
 def part2(data: str) -> typing.Union[str, int]:
-    pass
+    # TODO: there must be a more optimal way of doing this
+    #  - this code takes > 1m to run
+    starting_numbers = list(int(number) for number in data.split(","))
+    game = Game(starting_numbers)
+    results = game.play(to=30000000)
+    return list(results)[-1]
