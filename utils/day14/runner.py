@@ -12,22 +12,21 @@ class Instruction:
         match = re.match(regex_pattern, raw_instruction)
         return cls(*[int(value) for value in match.groups()])
 
+    def get_masked_value(self, mask: str):
+        output = ""
+        binary_value = '{:036b}'.format(self.integer_value)
+        for i, char in enumerate(binary_value):
+            output += char if mask[i] == "X" else mask[i]
+        return output
+
 
 class Runner:
-    def __init__(self, mask: str = "X" * 32):
-        self.mask = mask
+    def __init__(self):
         self.memory = {}
 
-    def store_value(self, instruction: Instruction):
-        masked_value = self.apply_mask(instruction.integer_value)
+    def store_value(self, instruction: Instruction, mask: str):
+        masked_value = instruction.get_masked_value(mask)
         self.memory[instruction.location] = int(masked_value, 2)
-
-    def apply_mask(self, integer_value: int) -> str:
-        output = ""
-        binary_value = '{:036b}'.format(integer_value)
-        for i, char in enumerate(binary_value):
-            output += char if self.mask[i] == "X" else self.mask[i]
-        return output
 
     @property
     def sum_of_values(self):
