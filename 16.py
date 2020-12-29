@@ -30,8 +30,11 @@ def part2(data: str):
 
     valid_tickets = list(filter(lambda t: t.get_invalid_values(rules) == [], nearby_tickets))
 
+    # iterate over each of the positions on a ticket, get the values for all of the
+    # tickets for that position and determine which rules match all of the values in
+    # that position. Add these to a dictionary keyed off the position with a set of
+    # possible rules as the value.
     position_possible_rules = {}
-
     for position in range(num_rules):
         values = set(map(lambda t: t.values[position], valid_tickets))
         for rule in scanner.rules:
@@ -40,6 +43,9 @@ def part2(data: str):
                 current_possible_rules.add(rule)
                 position_possible_rules[position] = current_possible_rules
 
+    # iterate over this dictionary to identify the correct position for each rule
+    # note: relies on the data having at least one position that can only be one
+    # possible rule.
     allocated_rules = set()
     while not len(allocated_rules) == len(rules):
         for key, value in position_possible_rules.items():
@@ -49,6 +55,7 @@ def part2(data: str):
                 rule.position = key
                 allocated_rules.add(rule)
 
+    # calculate the value for the response
     value = 1
     for rule in filter(lambda r: r.rule.name.startswith("departure"), scanner.rules):
         value *= my_ticket.values[rule.position]
