@@ -10,16 +10,20 @@ def evaluate_expression(expression: str, addition_first: bool = False) -> int:
 
     # if we want to carry out addition first, then we can simply replace any of the
     # addition expressions with brackets and call simplify expression on them
-    if addition_first and "+" in expression:
+    # before evaluating the expression.
+    # Note that we only care about expressions that contain both + and * operations,
+    # otherwise the order doesn't matter.
+    if addition_first and "+" in expression and "*" in expression:
         pattern = r"[0-9]+ \+ [0-9]+"
         for match in re.findall(pattern, expression):
             expression = expression.replace(match, f"({match})")
-        expression = simplify_expression(expression)
+        expression = simplify_expression(expression, addition_first=True)
 
     total = None
     operator = None
 
-    # iterate over each token in the expression
+    # iterate over each token in the expression and calculate the totals by building
+    # simple expressions and evaluating them using python's `eval` method
     for token in expression.split():
         if token.isdigit():
             if not total:
