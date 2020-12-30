@@ -10,4 +10,8 @@ def part1(data: str):
 
 
 def part2(data: str):
-    pass
+    results = []
+    for expression in data.splitlines():
+        simplified_expression = simplify_expression(expression, addition_first=True)
+        results.append(evaluate_expression(simplified_expression, addition_first=True))
+    return sum(results)
