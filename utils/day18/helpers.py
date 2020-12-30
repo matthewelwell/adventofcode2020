@@ -6,6 +6,9 @@ def evaluate_expression(expression: str, addition_first: bool = False) -> int:
     Takes an expression like 1 + 2 * 3 and evaluates it. This is done in the order
     that the equation is defined, or by carrying out any addition before multiplication
     if the addition_first flag is passed.
+
+    Note: expects the expression to be a simplified expression (i.e. contains no
+    parentheses)
     """
 
     # if we want to carry out addition first, then we can simply replace any of the
