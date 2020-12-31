@@ -17,7 +17,7 @@ def evaluate_expression(expression: str, addition_first: bool = False) -> int:
     # Note that we only care about expressions that contain both + and * operations,
     # otherwise the order doesn't matter.
     if addition_first and "+" in expression and "*" in expression:
-        pattern = r"[0-9]+ \+ [0-9]+"
+        pattern = r"(?:(?:[0-9]+)* \+ [0-9]+)+"
         for match in re.findall(pattern, expression):
             expression = expression.replace(match, f"({match})")
         expression = simplify_expression(expression, addition_first=True)

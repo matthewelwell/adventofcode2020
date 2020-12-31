@@ -12,6 +12,7 @@ from utils.day18.helpers import evaluate_expression, simplify_expression
         ("1 + 2 + 3 + 4 + 5 + 6", True, 21),
         ("1 + 3", True, 4),
         ("1 + 3 * 4", True, 16),
+        ("8 * 3 + 9 + 3 * 4 * 3", True, 1440),
     ),
 )
 def test_evaluate_expression(expression, addition_first, expected_value):
@@ -38,12 +39,14 @@ def test_simplify_expression(expression, expected_value):
         ("(1 + 3 * 4) + (2 + 5) * (3 * 7)", 483),
         ("((1 + 3) * 7 + 6) + (5 + 10 * 2) * (9 + 1)", 820),
         ("4 + (8 + 9 * 5) + 5 + 9 + 6 + 2", 111),
-        ("(7 * 8 + 6 * 3) * 3 * 2 * ((5 + 7 * 8 * 8) * (9 + 6 * 9 * 7 + 6 * 7) + 8 + (7 + 2 + 3 + 7 * 5 * 5) * (5 + 8) + 5) * 6", 1868127141888),
         ("7 + 7 + 3 + 9 + ((6 + 5) * 8 * 2) * 6", 1212),
         ("9 * 4", 36),
-
+        ("1 + 2 + 3 * 4", 24),
     ),
 )
 def test_simplify_and_evaluate(expression, expected_value):
     simplified_expression = simplify_expression(expression, addition_first=True)
-    assert evaluate_expression(simplified_expression, addition_first=True)
+    assert (
+        evaluate_expression(simplified_expression, addition_first=True)
+        == expected_value
+    )
